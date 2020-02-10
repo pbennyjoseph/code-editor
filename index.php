@@ -7,10 +7,11 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="codemirror-5.51.0/lib/codemirror.css">
-    <link rel="stylesheet" href="codemirror-5.51.0/theme/monokai.css">
-    <link rel="stylesheet" href="codemirror-5.51.0/theme/idea.css">
-    <link rel="stylesheet" href="codemirror-5.51.0/theme/ayu-mirage.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.51.0/codemirror.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.51.0/theme/monokai.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.51.0/theme/idea.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.51.0/theme/ayu-mirage.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 
@@ -73,7 +74,12 @@
                 </div>
                 <div class="card-body" id="txtcard">
                     <textarea style="display: none" id="main-editor"></textarea>
-                    <button id="go" class="mx-1 my-2 float-right btn btn-primary" >Compile and Run</button>
+                    <button id="go" class="mx-1 my-2 float-right btn btn-primary">Compile and Run</button>
+
+                    <button id="dl" type="button" class="float-right mx-1 my-2 btn btn-secondary" data-toggle="tooltip"
+                        data-placement="bottom" title="Download this code">
+                        <i class="fas fa-download"></i>
+                    </button>
                 </div>
                 <!-- <center><text class="">Ready.</text></center> -->
 
@@ -116,12 +122,14 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
     </script>
-    <script src="codemirror-5.51.0/lib/codemirror.js"></script>
-    <script src="codemirror-5.51.0/mode/clike/clike.js"></script>
-    <script src="codemirror-5.51.0/mode/python/python.js"></script>
-    <script src="codemirror-5.51.0/mode/javascript/javascript.js"></script>
-    <script src="codemirror-5.51.0/addon/edit/matchbrackets.js"></script>
-    <script src="codemirror-5.51.0/addon/comment/comment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.51.0/codemirror.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.51.0/mode/clike/clike.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.51.0/mode/python/python.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.51.0/mode/javascript/javascript.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.51.0/addon/edit/matchbrackets.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.51.0/addon/comment/comment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
+
 
     <script src="js/main.js"></script>
 </body>

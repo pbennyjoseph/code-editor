@@ -1,3 +1,11 @@
+function download(data, filename) {
+    var n = new Blob([data], {
+            type: "text/plain"
+        }),
+        s = window.URL.createObjectURL(n),
+        l = document.createElement("a");
+    l.href = s, l.download = filename, l.click()
+}
 
 var editor = this.editor = CodeMirror.fromTextArea(document.getElementById("main-editor"), {
     lineNumbers: true,
@@ -62,4 +70,9 @@ $("#lang-java").on('click', () => {
 $("#theme-idea,#theme-monokai,#theme-default,#theme-ayu-mirage").on('click', function () {
     editor.setOption("theme", this.id.slice("theme-".length, ));
 });
+
+$("#dl").on('click',() => {
+    download(this.editor.getValue(),"solution");
+})
+$("#dl").tooltip();
 $("script").remove();
