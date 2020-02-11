@@ -1,3 +1,61 @@
+<?php
+    session_start();
+    $_SESSION['message'] = "secret";
+    require_once('shared/config.php');
+    require_once('shared/utils.php');
+    $connection = new mysqli(DB_HOST,DB_USER,DB_PASSWD,DB_DATABASE);
+    $jsslug = "undefined";
+    $jskey = "undefined";
+    $src = "";
+    $ccodesrc = "#include <stdio.h>\n\nint main(){\n\t\n\treturn 0;\n}";
+    // Check connection
+    if ($connection -> connect_errno) {
+        echo "Failed to connect to MySQL: " . $connection -> connect_error;
+        exit();
+    }
+    if(isset($_GET['url'])){
+        $slug = substr($_GET['url'],0,6);
+        $key = substr($_GET['url'],6);
+        $query = "SELECT * from mapping where slug='$slug'";
+        $readonly = false;
+        if($key == "")
+            $readonly = true;
+        if(!($result  = $connection->query($query))){
+            die ('There was an error running query[' . $connection->error . ']');
+        }
+        if($result->num_rows > 0){
+           while($row = $result->fetch_assoc()){
+            //    var_dump($row);
+               $src = $row["src"];
+               $jsslug = $row["slug"];
+               $jskey = $row["editkey"];
+               $jsparams = $row["params"];
+               $readonly = ($row['editkey']!=$key);
+           }
+        }
+        else{
+            die("404 Not Found");
+        }
+    }
+    else {
+        do{
+            $string = generate_string(SLUG_CHARSET,6);
+            $query = "SELECT * from mapping where `slug` LIKE '%$string%'";
+            if(!($result  = $connection->query($query))){
+                die ('There was an error running query[' . $connection->error . ']');
+            }
+        } while($result->num_rows > 0);
+        $editkey = generate_string(SLUG_CHARSET,32);
+        $query = "INSERT INTO mapping (src,params,slug,editkey) VALUES('$ccodesrc','{\"lang\": \"C\",\"inp\": \"\", \"out\" : \"\"}','$string','$editkey');";
+        if(!($result  = $connection->query($query))){
+            die ('There was an error running query[' . $connection->error . ']');
+        }
+        header("Location: /code/$string$editkey");
+        exit();
+    }
+    $connection->close();
+    // exit();
+?>
 <!DOCTYPE HTML>
 <html>
 
@@ -13,6 +71,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.51.0/theme/idea.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.51.0/theme/ayu-mirage.css">
     <link rel="stylesheet" href="css/styles.css">
+    <script type="text/javascript">
+        <?php
+        if ($readonly) echo "var SLUG_KEY = undefined;";
+        else echo "var SLUG_KEY = '$jskey';";
+        echo "var SLUG = '$jsslug';";
+        echo "var PARAMS = JSON.parse('$jsparams');"; 
+        ?>
+    </script>
 </head>
 
 <body>
@@ -35,23 +101,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">About</a>
                 </li>
-                <!-- <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </li> -->
             </ul>
-            <!-- <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form> -->
         </div>
     </nav>
 
@@ -71,14 +121,21 @@
                     <a href="#" id="theme-idea" class="mx-1 float-right badge badge-light">Idea</a>
                     <a href="#" id="theme-ayu-mirage" class="mx-1 float-right badge badge-dark">ayu mirage</a>
                     <a href="#" id="theme-default" class="mx-1 float-right badge badge-default">default</a>
+                    <i style="color:green" class="fas fa-check"></i><i class="fas fa-spinner fa-pulse"
+                        style="display: none;"></i>
                 </div>
                 <div class="card-body" id="txtcard">
-                    <textarea style="display: none" id="main-editor"></textarea>
+
+                    <textarea style="display: none" id="main-editor"><?php echo $src ?></textarea>
                     <button id="go" class="mx-1 my-2 float-right btn btn-primary">Compile and Run</button>
 
                     <button id="dl" type="button" class="float-right mx-1 my-2 btn btn-secondary" data-toggle="tooltip"
                         data-placement="bottom" title="Download this code">
                         <i class="fas fa-download"></i>
+                    </button>
+
+                    <button id="save" type="button" class="mx-1 my-2 btn btn-warning">
+                        <i class="fas fa-save"></i>
                     </button>
                 </div>
                 <!-- <center><text class="">Ready.</text></center> -->
@@ -88,10 +145,48 @@
         <div class="col-sm-3">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                    <h5 class="card-title">Share</h5>
+                    <p class="card-text"></p>
+                    <p>
+                        <button class="btn btn-primary" id="editshare" data-toggle="tooltip" data-placement="bottom"
+                            title="Copy editable link">
+                            <i class="fas fa-share-alt"></i> + <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-primary" id="readshare" data-toggle="tooltip" data-placement="bottom"
+                            title="Copy Readonly Link">
+                            <i class="fas fa-share-alt"></i>
+                        </button>
+                    </p>
                 </div>
+
+                <div id="wrongkey" class="mx-2 my-2 toast fade hide" role="alert" aria-live="assertive" data-delay="5000"
+                aria-atomic="true">
+                <div class="toast-header">
+                    <strong class="mr-auto"><i class="fas fa-exclamation-triangle"></i></strong>
+                    <small>from DataUpdater</small>
+                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="toast-body">
+                    Oops! That was an incorrect key! Maybe this is a Read-Only Code
+                </div>
+            </div>
+
+            <div id="updatesuccess" class="mx-2 my-2 toast fade hide" role="alert" aria-live="assertive" data-delay="3000"
+                aria-atomic="true">
+                <div class="toast-header">
+                    <strong class="mr-auto"><i style="color:green" class="fas fa-check"></i></strong>
+                    <small>from DataUpdater</small>
+                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="toast-body">
+                    Updated in Database!
+                </div>
+            </div>
+
             </div>
         </div>
     </div>
