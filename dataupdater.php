@@ -13,10 +13,11 @@
             echo "Failed to connect to MySQL: " . $connection -> connect_error;
             exit();
         }
-        $check = "SELECT * FROM MAPPING WHERE slug='$jsslug' and editkey='$jskey'";
-        if($result = $connection->query($check)){
-            if($result->num_rows === 0 ) die("Incorrect Key");
-        }
+        $check = "SELECT * FROM mapping WHERE slug='$jsslug' and editkey='$jskey'";
+        $result = $connection->query($check);
+		// echo $result->num_rows;
+		if($result->num_rows == 0) die("Incorrect Key");
+        
         $sql = "UPDATE mapping SET src='$src',params='$params' WHERE slug='$jsslug'";
         if ($connection->query($sql) === TRUE) {
             echo "Record updated successfully";

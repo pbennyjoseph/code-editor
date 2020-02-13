@@ -1,8 +1,8 @@
 <?php
     session_start();
     $_SESSION['message'] = "secret";
-    require_once('shared/config.php');
-    require_once('shared/utils.php');
+    require_once('./shrd/config.php');
+    require_once('./shrd/utils.php');
     $connection = new mysqli(DB_HOST,DB_USER,DB_PASSWD,DB_DATABASE);
     $jsslug = "undefined";
     $jskey = "undefined";
@@ -70,13 +70,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.51.0/theme/monokai.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.51.0/theme/idea.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.51.0/theme/ayu-mirage.css">
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="./css/styles.css">
     <script type="text/javascript">
         <?php
-        if ($readonly) echo "var SLUG_KEY = undefined;";
-        else echo "var SLUG_KEY = '$jskey';";
-        echo "var SLUG = '$jsslug';";
-        echo "var PARAMS = JSON.parse('$jsparams');"; 
+        if ($readonly) echo 'var SLUG_KEY = \'\';';
+        else echo 'var SLUG_KEY = \''.$jskey.'\';';
+        echo 'var SLUG = \''.$jsslug.'\';';
+        echo 'var PARAMS = JSON.parse(\''.$jsparams.'\');'; 
         ?>
     </script>
 </head>
@@ -109,7 +109,7 @@
         <div class="col-sm-9">
             <div class="card">
                 <div class="card-header" id="main-header">
-                    <text>Language : </text><text id="lang">C</text>
+                    <text>Language : </text><text id="lang"></text>
                     <!-- <img id="lang-img" width="48px" height="48px" class="rounded" src="img/cpp.png" /> -->
                     <a href="#" id="lang-py" class="mx-1 float-right badge badge-warning">Python 3.6</a>
                     <a href="#" id="lang-js" class="mx-1 float-right badge badge-danger">Javascript</a>
@@ -226,7 +226,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
 
 
-    <script src="js/main.js"></script>
+    <script src="./js/main.js"></script>
 </body>
 
 </html>

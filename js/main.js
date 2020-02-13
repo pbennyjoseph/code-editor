@@ -47,12 +47,13 @@ dataupdate = () => {
             key: SLUG_KEY || "",
             src: editor.getValue(),
             params: JSON.stringify({
-                inp: $("#inp").val().trim(),
+                inp: escape($("#inp").val().trim()),
                 out: escape($("#output").html()),
                 lang: currentLang
             })
         },
         (data, status) => {
+			window.scrollTo(0, 0);
             if(data == "Incorrect Key"){
                 $('#wrongkey').toast('show');
             }
@@ -74,7 +75,7 @@ var editor = this.editor = CodeMirror.fromTextArea(document.getElementById("main
     indentWithTabs: true,
     lineWrapping: true,
     viewportMargin: 50,
-    readOnly: (SLUG_KEY==undefined),
+    readOnly: (SLUG_KEY==""),
     matchBrackets: true
 });
 
@@ -101,7 +102,7 @@ $("#go").on('click', function () {
 
 $("#editshare").on('click', function() {
     console.log(this);
-    copyToClipboard("http://benny/code/" + SLUG + "$"+ SLUG_KEY,$(this))
+    copyToClipboard("http://benny/code/" + SLUG + SLUG_KEY,$(this))
 })
 
 
@@ -155,7 +156,8 @@ $("#save").on('click', () => dataupdate())
 $("#dl").tooltip();
 $("#editshare").tooltip();
 $("#readshare").tooltip();
-$("#inp").html(PARAMS["inp"]);
+$("#lang").html(currentLang);
+$("#inp").html(unescape(PARAMS["inp"]));
 $("#output").html(unescape(PARAMS["out"]));
 // if (SLUG_KEY) setInterval(dataupdate, DATA_UPDATE_TIME);
 $("script").remove();
