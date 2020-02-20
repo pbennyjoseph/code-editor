@@ -8,3 +8,14 @@
     min-height: 180px;
     max-height: 500px;
 }
+
+.alert-trim {
+    display: inline-block;
+    border: 1px solid gold;
+    color: black;
+}
+
+.card-columns{
+    column-count: 1;
+    column-gap: 0rem;
+}

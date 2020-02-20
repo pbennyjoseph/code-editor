@@ -74,9 +74,12 @@
     <script type="text/javascript">
         <?php
         if ($readonly) echo 'var SLUG_KEY = \'\';';
-        else echo 'var SLUG_KEY = \''.$jskey.'\';';
-        echo 'var SLUG = \''.$jsslug.'\';';
-        echo 'var PARAMS = JSON.parse(\''.$jsparams.'\');'; 
+        else echo 'var SLUG_KEY = \''.$jskey.
+        '\';';
+        echo 'var SLUG = \''.$jsslug.
+        '\';';
+        echo 'var PARAMS = JSON.parse(\''.$jsparams.
+        '\');'; 
         ?>
     </script>
 </head>
@@ -99,11 +102,30 @@
                     <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
+                    <a class="nav-link" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false"
+                        aria-controls="collapseExample" href="#">About</a>
                 </li>
             </ul>
         </div>
     </nav>
+    <div class="collapse mx-2 my-2" id="collapseExample">
+        <div class="card card-body">
+            <p class="card-text">
+                This site was made to make compiling, running and sharing of code among teammates during programming
+                contests easier.<br />
+                <b>Features</b><br />
+                Compile and Run code<br />
+                Share readonly or Editable code<br />
+                Test sample inputs and outputs<br />
+                <a class="card-link" href="https://github.com/pbennyjoseph"> &copy;pbennyjoseph </a></p>
+        </div>
+    </div>
+
+    <?php
+        if($readonly) echo '<center><div class="mx-2 my-2 alert alert-warning alert-trim black" role="alert">
+                This is a readonly code!
+                </div></center>';
+    ?>
 
     <div class="row my-3 mx-2">
         <div class="col-sm-9">
@@ -143,50 +165,60 @@
             </div>
         </div>
         <div class="col-sm-3">
+            <div class="card-columns">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Share</h5>
+                        <p class="card-text"></p>
+                        <p>
+                            <button class="btn btn-primary" id="editshare" data-toggle="tooltip" data-placement="bottom"
+                                title="Copy editable link">
+                                <i class="fas fa-share-alt"></i> + <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-primary" id="readshare" data-toggle="tooltip" data-placement="bottom"
+                                title="Copy Readonly Link">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                        </p>
+                    </div>
+
+                    <div id="wrongkey" class="mx-2 my-2 toast fade hide" role="alert" aria-live="assertive"
+                        data-delay="5000" aria-atomic="true">
+                        <div class="toast-header">
+                            <strong class="mr-auto"><i class="fas fa-exclamation-triangle"></i></strong>
+                            <small>from DataUpdater</small>
+                            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="toast-body">
+                            Oops! That was an incorrect key! Maybe this is a Read-Only Code
+                        </div>
+                    </div>
+
+                    <div id="updatesuccess" class="mx-2 my-2 toast fade hide" role="alert" aria-live="assertive"
+                        data-delay="3000" aria-atomic="true">
+                        <div class="toast-header">
+                            <strong class="mr-auto"><i style="color:green" class="fas fa-check"></i></strong>
+                            <small>from DataUpdater</small>
+                            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="toast-body">
+                            Updated in Database!
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Share</h5>
-                    <p class="card-text"></p>
-                    <p>
-                        <button class="btn btn-primary" id="editshare" data-toggle="tooltip" data-placement="bottom"
-                            title="Copy editable link">
-                            <i class="fas fa-share-alt"></i> + <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-primary" id="readshare" data-toggle="tooltip" data-placement="bottom"
-                            title="Copy Readonly Link">
-                            <i class="fas fa-share-alt"></i>
-                        </button>
-                    </p>
+                    <h5 class="card-title">Templates</h5>
+                    <p class="card-text">Templates for the language will appear here</p>
                 </div>
-
-                <div id="wrongkey" class="mx-2 my-2 toast fade hide" role="alert" aria-live="assertive" data-delay="5000"
-                aria-atomic="true">
-                <div class="toast-header">
-                    <strong class="mr-auto"><i class="fas fa-exclamation-triangle"></i></strong>
-                    <small>from DataUpdater</small>
-                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="toast-body">
-                    Oops! That was an incorrect key! Maybe this is a Read-Only Code
-                </div>
-            </div>
-
-            <div id="updatesuccess" class="mx-2 my-2 toast fade hide" role="alert" aria-live="assertive" data-delay="3000"
-                aria-atomic="true">
-                <div class="toast-header">
-                    <strong class="mr-auto"><i style="color:green" class="fas fa-check"></i></strong>
-                    <small>from DataUpdater</small>
-                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="toast-body">
-                    Updated in Database!
-                </div>
-            </div>
-
             </div>
         </div>
     </div>
@@ -225,8 +257,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.51.0/addon/comment/comment.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
 
-
+    <?php
+        if($readonly) echo "<script type='text/javascript'>$('#save').prop('disabled','true');</script>";
+    ?>
     <script src="./js/main.js"></script>
+
 </body>
 
 </html>

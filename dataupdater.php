@@ -1,6 +1,6 @@
 <?php
     session_start();
-    require_once('shared/config.php');
+    require_once('./shrd/config.php');
     if(!isset($_SESSION['message'])) die("403 Forbidden.");
     if(isset($_POST['src'])){
         $connection = new mysqli(DB_HOST,DB_USER,DB_PASSWD,DB_DATABASE);
